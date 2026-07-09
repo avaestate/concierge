@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>AVA Concierge — Bikes &amp; Cars · Koh Phangan</title>
 <meta name="description" content="Scooters &amp; cars delivered to your villa on Koh Phangan — automatic, serviced, arranged by your AVA concierge." />
-<meta name="theme-color" content="#161b1c" />
+<meta name="theme-color" content="#2b3639" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -24,7 +24,7 @@
      Data source of truth: data/bikes_catalog.md (partner: Nico / AVA Bike-Auto)
      ===================================================================== */
   :root{
-    --gold:#c8a96a;
+    --gold:#f0e7df;
     --gold-soft:#d9c193;
     --cream:#efe6da;
     --ink:#efe6da;
@@ -32,13 +32,13 @@
     --slate:#c2cccd;
     --muted:#9aa3a5;
 
-    --bg:#161b1c;
-    --cream-1:#1e2526;
-    --cream-3:#1d2425;
-    --white:#202829;
+    --bg:#2b3639;
+    --cream-1:#33403f;
+    --cream-3:#313d3c;
+    --white:#33403f;
 
-    --line:rgba(200,169,106,.18);
-    --line-strong:rgba(200,169,106,.34);
+    --line:rgba(240,231,223,.18);
+    --line-strong:rgba(240,231,223,.34);
     --shadow-sm:0 1px 2px rgba(0,0,0,.30), 0 2px 8px rgba(0,0,0,.28);
     --shadow-md:0 12px 30px -16px rgba(0,0,0,.6), 0 4px 12px rgba(0,0,0,.3);
     --shadow-lg:0 30px 60px -26px rgba(0,0,0,.7), 0 8px 18px rgba(0,0,0,.35);
@@ -71,9 +71,9 @@
   .app{
     position:relative; width:100%; max-width:var(--phone);
     min-height:min(900px, calc(100dvh - 48px));
-    background:linear-gradient(180deg,#202829,#161b1c);
+    background:linear-gradient(180deg,#33403f,#2b3639);
     border-radius:42px;
-    box-shadow:0 50px 90px -30px rgba(0,0,0,.7), 0 0 0 1px rgba(200,169,106,.10);
+    box-shadow:0 50px 90px -30px rgba(0,0,0,.7), 0 0 0 1px rgba(240,231,223,.10);
     overflow:hidden; isolation:isolate;
   }
   .app::after{
@@ -91,15 +91,15 @@
     display:flex; align-items:center; gap:12px;
   }
   .back-btn{
-    border:1px solid var(--line); background:rgba(200,169,106,.08); cursor:pointer;
+    border:1px solid var(--line); background:rgba(240,231,223,.08); cursor:pointer;
     width:38px;height:38px;border-radius:11px; display:grid; place-items:center; color:var(--gold);
     flex:0 0 auto; transition:.3s var(--ease);
   }
-  .back-btn:hover{background:rgba(200,169,106,.16); border-color:var(--line-strong)}
+  .back-btn:hover{background:rgba(240,231,223,.16); border-color:var(--line-strong)}
   .brand{display:flex; align-items:center; gap:11px; flex:1; min-width:0}
   .mark{
     width:40px;height:40px;border-radius:12px; flex:0 0 auto;
-    background:linear-gradient(150deg,#2e3739,#1d2425); border:1px solid var(--line);
+    background:linear-gradient(150deg,#2e3739,#313d3c); border:1px solid var(--line);
     display:grid;place-items:center; box-shadow:var(--shadow-sm);
   }
   .mark svg{width:22px;height:22px}
@@ -112,7 +112,7 @@
   /* ---- intro ---- */
   .intro{margin:6px 2px 22px}
   .intro .hi{display:inline-flex; align-items:center; gap:9px; font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:var(--gold); font-weight:600; margin-bottom:14px}
-  .intro .hi .dot{width:6px;height:6px;border-radius:50%; background:var(--gold); box-shadow:0 0 0 4px rgba(200,169,106,.16); animation:pulse 2.6s var(--ease) infinite}
+  .intro .hi .dot{width:6px;height:6px;border-radius:50%; background:var(--gold); box-shadow:0 0 0 4px rgba(240,231,223,.16); animation:pulse 2.6s var(--ease) infinite}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
   .intro h1{font-size:29px; line-height:1.12; font-weight:300; letter-spacing:-.02em; color:#f3ece1}
   .intro h1 em{font-style:normal; font-weight:400; color:var(--gold-soft)}
@@ -139,7 +139,7 @@
     padding:11px 8px; border-radius:10px; transition:.28s var(--ease);
     display:flex; align-items:center; justify-content:center; gap:6px; white-space:nowrap;
   }
-  .tab:hover{color:var(--cream); background:rgba(200,169,106,.06)}
+  .tab:hover{color:var(--cream); background:rgba(240,231,223,.06)}
   .tab.active{
     color:#1a2122; background:linear-gradient(150deg,var(--gold-soft),var(--gold));
     border-color:var(--line-strong); box-shadow:var(--shadow-sm);
@@ -210,7 +210,7 @@
   .cat .meta{margin-top:11px; display:flex; flex-wrap:wrap; gap:7px}
   .cat .tag{
     display:inline-flex; align-items:center; gap:6px; font-size:11px; color:var(--cream);
-    background:rgba(200,169,106,.07); border:1px solid var(--line); border-radius:8px; padding:5px 10px; font-weight:500;
+    background:rgba(240,231,223,.07); border:1px solid var(--line); border-radius:8px; padding:5px 10px; font-weight:500;
   }
   .cat .tag i{font-size:14px; color:var(--gold); line-height:1}
   .cat .req-row{margin-top:14px}
@@ -255,10 +255,10 @@
   .btn-primary svg{width:17px;height:17px}
   .btn-ghost{
     width:100%; border:1px solid var(--line-strong); cursor:pointer; font-weight:600; font-size:14px; color:var(--cream);
-    background:rgba(200,169,106,.05); padding:14px; border-radius:13px; transition:.3s var(--ease);
+    background:rgba(240,231,223,.05); padding:14px; border-radius:13px; transition:.3s var(--ease);
     display:flex; align-items:center; justify-content:center; gap:9px; margin-top:10px;
   }
-  .btn-ghost:hover{background:rgba(200,169,106,.12); border-color:var(--gold)}
+  .btn-ghost:hover{background:rgba(240,231,223,.12); border-color:var(--gold)}
 
   .foot{margin:26px 4px 4px; text-align:center; color:var(--muted); font-size:11px; line-height:1.6}
   .foot b{color:var(--gold-soft); font-weight:600}
@@ -272,7 +272,7 @@
   .sheet-back.open{opacity:1; pointer-events:auto}
   .sheet{
     width:100%; max-width:var(--phone); max-height:92dvh; overflow-y:auto;
-    background:linear-gradient(180deg,#1e2526,#161b1c); border:1px solid var(--line);
+    background:linear-gradient(180deg,#33403f,#2b3639); border:1px solid var(--line);
     border-radius:26px 26px 0 0; box-shadow:var(--shadow-lg);
     transform:translateY(100%); transition:transform .42s var(--ease);
     padding:8px 20px calc(env(safe-area-inset-bottom) + 22px);
@@ -285,8 +285,8 @@
   .sheet-hd .sic i{font-size:26px; color:var(--gold); line-height:1}
   .sheet-hd .k{font-size:10px; letter-spacing:.24em; text-transform:uppercase; color:var(--gold); font-weight:600}
   .sheet-hd h2{font-size:21px; font-weight:400; color:#f3ece1; margin-top:3px}
-  .sheet-close{margin-left:auto; width:36px;height:36px;border-radius:10px; border:1px solid var(--line); background:rgba(200,169,106,.06); color:var(--gold); cursor:pointer; display:grid; place-items:center; transition:.3s var(--ease)}
-  .sheet-close:hover{background:rgba(200,169,106,.16); transform:rotate(90deg)}
+  .sheet-close{margin-left:auto; width:36px;height:36px;border-radius:10px; border:1px solid var(--line); background:rgba(240,231,223,.06); color:var(--gold); cursor:pointer; display:grid; place-items:center; transition:.3s var(--ease)}
+  .sheet-close:hover{background:rgba(240,231,223,.16); transform:rotate(90deg)}
 
   .field{margin-bottom:14px}
   .field:first-of-type{margin-top:14px}
@@ -299,7 +299,7 @@
   }
   .field input::placeholder, .field textarea::placeholder{color:var(--muted); opacity:.8}
   .field input:focus, .field textarea:focus, .field select:focus{
-    outline:none; border-color:var(--gold); background:#222a2c; box-shadow:0 0 0 4px rgba(200,169,106,.14);
+    outline:none; border-color:var(--gold); background:#222a2c; box-shadow:0 0 0 4px rgba(240,231,223,.14);
   }
   /* native date input: make it behave like a normal full-width field (no intrinsic squish) */
   .field input[type=date]{
@@ -311,7 +311,7 @@
     filter:invert(74%) sepia(18%) saturate(560%) hue-rotate(2deg) brightness(92%); cursor:pointer; opacity:.9;
   }
   .field textarea{min-height:64px; resize:vertical; line-height:1.5}
-  .field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M6 9l6 6 6-6' stroke='%23c8a96a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; padding-right:38px}
+  .field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M6 9l6 6 6-6' stroke='%23f0e7df' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; padding-right:38px}
   .field select option{background:#1b2123; color:var(--cream)}
   /* From–To date range: two evenly-sized, full-width columns that don't shrink-overflow on mobile */
   .field-row{display:grid; grid-template-columns:1fr 1fr; gap:11px; align-items:end}
@@ -374,7 +374,7 @@
       </a>
       <div class="brand">
         <span class="mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M3 16c2.2 0 2.2-2 4.4-2s2.2 2 4.4 2 2.2-2 4.4-2 2.2 2 4.4 2" stroke="#c8a96a" stroke-width="1.7" stroke-linecap="round"/><path d="M12 3.5l3 5.5H9l3-5.5z" stroke="#c8a96a" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          <svg viewBox="0 0 24 24" fill="none"><path d="M3 16c2.2 0 2.2-2 4.4-2s2.2 2 4.4 2 2.2-2 4.4-2 2.2 2 4.4 2" stroke="#f0e7df" stroke-width="1.7" stroke-linecap="round"/><path d="M12 3.5l3 5.5H9l3-5.5z" stroke="#f0e7df" stroke-width="1.5" stroke-linejoin="round"/></svg>
         </span>
         <div>
           <div class="name">AVA CONCIERGE</div>
