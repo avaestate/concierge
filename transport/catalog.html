@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>AVA Concierge — Bikes &amp; Cars · Koh Phangan</title>
+<meta name="description" content="Scooters &amp; cars delivered to your villa on Koh Phangan — automatic, serviced, arranged by your AVA concierge." />
+<meta name="theme-color" content="#161b1c" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+<!-- Phosphor icons (matches the AVA Concierge app) -->
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/thin/style.css" />
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/light/style.css" />
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css" />
+<style>
+  /* =====================================================================
+     AVA Concierge — Bikes & Cars catalog
+     Theme matched to the live PWA (index.html) — dark graphite + soft gold.
+     Mobile-first; centers inside a phone frame on desktop.
+     Data source of truth: data/bikes_catalog.md (partner: Nico / AVA Bike-Auto)
+     ===================================================================== */
+  :root{
+    --gold:#c8a96a;
+    --gold-soft:#d9c193;
+    --cream:#efe6da;
+    --ink:#efe6da;
+    --ink-soft:#f3ece1;
+    --slate:#c2cccd;
+    --muted:#9aa3a5;
+
+    --bg:#161b1c;
+    --cream-1:#1e2526;
+    --cream-3:#1d2425;
+    --white:#202829;
+
+    --line:rgba(200,169,106,.18);
+    --line-strong:rgba(200,169,106,.34);
+    --shadow-sm:0 1px 2px rgba(0,0,0,.30), 0 2px 8px rgba(0,0,0,.28);
+    --shadow-md:0 12px 30px -16px rgba(0,0,0,.6), 0 4px 12px rgba(0,0,0,.3);
+    --shadow-lg:0 30px 60px -26px rgba(0,0,0,.7), 0 8px 18px rgba(0,0,0,.35);
+    --radius:18px;
+    --radius-sm:13px;
+    --ease:cubic-bezier(.2,.8,.2,1);
+    --phone:430px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;height:100%}
+  body{
+    margin:0;
+    font-family:"Manrope", system-ui, -apple-system, sans-serif;
+    color:var(--cream);
+    background:
+      radial-gradient(120% 80% at 50% -10%, #2e3739, transparent 60%),
+      linear-gradient(180deg,#171d1e,#0f1314);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    line-height:1.5;
+    min-height:100%;
+  }
+  h1,h2,h3,h4{font-family:"Manrope", system-ui, sans-serif; font-weight:400; letter-spacing:-.015em; color:var(--ink-soft); margin:0}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit}
+  img{max-width:100%;display:block}
+
+  /* ---- phone frame on desktop, full-bleed on phones ---- */
+  .stage{min-height:100dvh; display:flex; align-items:center; justify-content:center; padding:24px 16px}
+  .app{
+    position:relative; width:100%; max-width:var(--phone);
+    min-height:min(900px, calc(100dvh - 48px));
+    background:linear-gradient(180deg,#202829,#161b1c);
+    border-radius:42px;
+    box-shadow:0 50px 90px -30px rgba(0,0,0,.7), 0 0 0 1px rgba(200,169,106,.10);
+    overflow:hidden; isolation:isolate;
+  }
+  .app::after{
+    content:""; position:absolute; inset:0; pointer-events:none; z-index:60; opacity:.04;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode:overlay;
+  }
+
+  /* ---- header ---- */
+  .appbar{
+    position:sticky; top:0; z-index:30;
+    -webkit-backdrop-filter:saturate(120%) blur(14px); backdrop-filter:saturate(120%) blur(14px);
+    background:rgba(26,33,34,.78); border-bottom:1px solid var(--line);
+    padding:calc(env(safe-area-inset-top) + 14px) 18px 14px;
+    display:flex; align-items:center; gap:12px;
+  }
+  .back-btn{
+    border:1px solid var(--line); background:rgba(200,169,106,.08); cursor:pointer;
+    width:38px;height:38px;border-radius:11px; display:grid; place-items:center; color:var(--gold);
+    flex:0 0 auto; transition:.3s var(--ease);
+  }
+  .back-btn:hover{background:rgba(200,169,106,.16); border-color:var(--line-strong)}
+  .brand{display:flex; align-items:center; gap:11px; flex:1; min-width:0}
+  .mark{
+    width:40px;height:40px;border-radius:12px; flex:0 0 auto;
+    background:linear-gradient(150deg,#2e3739,#1d2425); border:1px solid var(--line);
+    display:grid;place-items:center; box-shadow:var(--shadow-sm);
+  }
+  .mark svg{width:22px;height:22px}
+  .brand .name{font-weight:600; font-size:14px; letter-spacing:.18em; line-height:1; color:var(--cream)}
+  .brand .sub{font-size:9.5px; letter-spacing:.26em; text-transform:uppercase; color:var(--gold); margin-top:5px}
+
+  /* ---- scroll body ---- */
+  .scroll{padding:20px 18px calc(env(safe-area-inset-bottom) + 34px)}
+
+  /* ---- intro ---- */
+  .intro{margin:6px 2px 22px}
+  .intro .hi{display:inline-flex; align-items:center; gap:9px; font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:var(--gold); font-weight:600; margin-bottom:14px}
+  .intro .hi .dot{width:6px;height:6px;border-radius:50%; background:var(--gold); box-shadow:0 0 0 4px rgba(200,169,106,.16); animation:pulse 2.6s var(--ease) infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+  .intro h1{font-size:29px; line-height:1.12; font-weight:300; letter-spacing:-.02em; color:#f3ece1}
+  .intro h1 em{font-style:normal; font-weight:400; color:var(--gold-soft)}
+  .intro p{margin:11px 0 0; color:var(--muted); font-size:14px; line-height:1.55; max-width:36ch}
+
+  /* ---- USP chips ---- */
+  .usps{display:grid; grid-template-columns:repeat(3,1fr); gap:9px; margin:0 0 24px}
+  .usp{
+    background:linear-gradient(160deg,#222a2c,#1a2021); border:1px solid var(--line);
+    border-radius:14px; padding:13px 11px; text-align:center;
+  }
+  .usp i{font-size:24px; color:var(--gold); line-height:1}
+  .usp b{display:block; font-size:11.5px; font-weight:600; color:var(--cream); margin-top:7px; line-height:1.25}
+
+  /* ---- filter tabs (segmented control) ---- */
+  .tabs{
+    display:flex; gap:6px; margin:0 0 20px; padding:5px;
+    background:linear-gradient(160deg,#1c2324,#171d1e); border:1px solid var(--line);
+    border-radius:14px; box-shadow:inset 0 1px 2px rgba(0,0,0,.25);
+  }
+  .tab{
+    flex:1 1 0; min-width:0; cursor:pointer; border:1px solid transparent; background:transparent;
+    color:var(--slate); font-weight:600; font-size:13.5px; letter-spacing:.01em;
+    padding:11px 8px; border-radius:10px; transition:.28s var(--ease);
+    display:flex; align-items:center; justify-content:center; gap:6px; white-space:nowrap;
+  }
+  .tab:hover{color:var(--cream); background:rgba(200,169,106,.06)}
+  .tab.active{
+    color:#1a2122; background:linear-gradient(150deg,var(--gold-soft),var(--gold));
+    border-color:var(--line-strong); box-shadow:var(--shadow-sm);
+  }
+  .tab.active:hover{filter:brightness(1.03); background:linear-gradient(150deg,var(--gold-soft),var(--gold))}
+
+  /* ---- section label ---- */
+  .sec-label{display:flex; align-items:baseline; justify-content:space-between; margin:6px 2px 14px}
+  .sec-label .t{font-size:11.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); font-weight:600}
+  .sec-label .c{font-size:11.5px; color:var(--muted)}
+
+  /* ---- category cards ---- */
+  .cats{display:flex; flex-direction:column; gap:14px}
+  .cat{
+    position:relative; overflow:hidden; text-align:left; width:100%; cursor:pointer;
+    background:linear-gradient(160deg,#222a2c,#1a2021); border:1px solid var(--line);
+    border-radius:var(--radius); box-shadow:var(--shadow-sm); padding:0;
+    transition:transform .35s var(--ease), border-color .35s var(--ease), box-shadow .35s var(--ease);
+    display:block;
+  }
+  .cat:hover{transform:translateY(-3px); border-color:var(--line-strong); box-shadow:var(--shadow-md)}
+  .cat:active{transform:scale(.99)}
+  /* representative image area: real model photo over a gradient panel (gold line icon = fallback) */
+  .cat .media{
+    position:relative; height:172px; display:grid; place-items:center; overflow:hidden;
+    background:var(--cat-grad, linear-gradient(150deg,#2f3a3c,#1a2122));
+    border-bottom:1px solid var(--line);
+  }
+  .cat .media::before{content:""; position:absolute; inset:0; z-index:1; background:radial-gradient(120% 100% at 80% 0%, rgba(255,255,255,.08), transparent 55%)}
+  .cat .media i{position:relative; z-index:2; font-size:58px; color:#fff; opacity:.92; line-height:1; filter:drop-shadow(0 6px 14px rgba(0,0,0,.4))}
+  /* the model photo sits above the gradient; covers the fallback icon when present */
+  .cat .media .hero{
+    position:absolute; inset:0; z-index:2; width:100%; height:100%;
+    object-fit:cover; object-position:center 50%;
+    transition:transform .5s var(--ease);
+  }
+  .cat:hover .media .hero{transform:scale(1.04)}
+  /* soft scrim so the gold badge + tag stay readable over photos */
+  .cat .media .scrim{position:absolute; inset:0; z-index:2; pointer-events:none;
+    background:linear-gradient(180deg, rgba(15,19,20,.18) 0%, transparent 32%, transparent 64%, rgba(15,19,20,.42) 100%)}
+  /* per-model thumbnail strip */
+  .cat .thumbs{display:flex; gap:8px; margin-top:13px; overflow:hidden}
+  .cat .thumb{flex:1 1 0; min-width:0; text-align:center}
+  .cat .thumb .pic{
+    position:relative; height:46px; border-radius:9px; overflow:hidden;
+    background:linear-gradient(150deg,#2a3335,#1b2223); border:1px solid var(--line);
+  }
+  .cat .thumb .pic img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 60%}
+  .cat .thumb .lbl{display:block; margin-top:5px; font-size:9px; line-height:1.2; color:var(--slate); letter-spacing:.01em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .cat .ph-tag{
+    position:absolute; left:14px; bottom:12px; z-index:2; font-size:9px; letter-spacing:.14em; text-transform:uppercase;
+    color:rgba(255,255,255,.82); background:rgba(0,0,0,.22); border:1px solid rgba(255,255,255,.18);
+    padding:4px 9px; border-radius:999px; -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px);
+  }
+  .cat .ribbon{
+    position:absolute; top:13px; right:13px; z-index:3; font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    color:#1a2122; background:linear-gradient(150deg,var(--gold-soft),var(--gold)); padding:5px 11px; border-radius:999px; box-shadow:var(--shadow-sm);
+  }
+  .cat .info{padding:16px 17px 17px}
+  .cat .top{display:flex; align-items:baseline; justify-content:space-between; gap:12px}
+  .cat .nm{font-size:18px; font-weight:500; color:#f3ece1; letter-spacing:-.01em; line-height:1.1}
+  .cat .pr{font-size:17px; font-weight:600; color:var(--gold-soft); white-space:nowrap}
+  .cat .pr small{display:block; text-align:right; font-size:10px; font-weight:500; color:var(--muted); margin-top:2px}
+  .cat .mods{margin-top:9px; font-size:12.5px; color:var(--slate); line-height:1.5}
+  .cat .mods b{color:var(--cream); font-weight:600}
+  .cat .note{margin-top:9px; display:flex; gap:7px; align-items:flex-start; font-size:11.5px; color:var(--muted); line-height:1.45}
+  .cat .note i{flex:0 0 auto; font-size:14px; color:var(--gold); line-height:1; margin-top:1px}
+  .cat .meta{margin-top:11px; display:flex; flex-wrap:wrap; gap:7px}
+  .cat .tag{
+    display:inline-flex; align-items:center; gap:6px; font-size:11px; color:var(--cream);
+    background:rgba(200,169,106,.07); border:1px solid var(--line); border-radius:8px; padding:5px 10px; font-weight:500;
+  }
+  .cat .tag i{font-size:14px; color:var(--gold); line-height:1}
+  .cat .req-row{margin-top:14px}
+  .cat .req-btn{
+    width:100%; border:0; cursor:pointer; font-weight:600; font-size:13.5px; color:#1a2122;
+    background:linear-gradient(150deg,var(--gold-soft),var(--gold)); padding:13px; border-radius:12px; letter-spacing:.01em;
+    box-shadow:var(--shadow-sm); transition:.3s var(--ease);
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .cat .req-btn:hover{filter:brightness(1.05); transform:translateY(-1px)}
+  .cat .req-btn svg{width:16px;height:16px}
+
+  /* ---- terms block ---- */
+  .terms{
+    margin:24px 0 8px; background:linear-gradient(160deg,#222a2c,#1a2021);
+    border:1px solid var(--line); border-left:4px solid var(--gold);
+    border-radius:var(--radius); box-shadow:var(--shadow-sm); padding:18px 18px 16px;
+  }
+  .terms h4{font-size:11.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); font-weight:600; margin-bottom:14px}
+  .terms ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:13px}
+  .terms li{display:flex; gap:11px; align-items:flex-start; font-size:13px; color:var(--slate); line-height:1.45}
+  .terms li i{flex:0 0 auto; font-size:19px; color:var(--gold); line-height:1; margin-top:1px}
+  .terms li b{color:var(--cream); font-weight:600}
+
+  /* ---- big request CTA ---- */
+  .cta-card{
+    margin:22px 0 4px; text-align:center;
+    background:linear-gradient(150deg,#2f3a3c,#1a2122); border:1px solid var(--line-strong);
+    border-radius:var(--radius); box-shadow:var(--shadow-md); padding:24px 22px 22px;
+  }
+  .cta-card .ico{font-size:38px; color:var(--gold-soft); line-height:1}
+  .cta-card h3{font-size:20px; font-weight:400; color:#f3ece1; margin:12px 0 0; letter-spacing:-.01em}
+  .cta-card p{font-size:13px; color:var(--muted); line-height:1.55; margin:9px auto 18px; max-width:34ch}
+  .btn-primary{
+    width:100%; border:0; cursor:pointer; font-weight:700; font-size:15px; color:#1a2122;
+    background:linear-gradient(150deg,var(--gold-soft),var(--gold)); padding:16px; border-radius:13px; letter-spacing:.02em;
+    box-shadow:var(--shadow-md); transition:.3s var(--ease);
+    display:flex; align-items:center; justify-content:center; gap:9px;
+  }
+  .btn-primary:hover{filter:brightness(1.05); transform:translateY(-2px)}
+  .btn-primary:active{transform:translateY(0) scale(.99)}
+  .btn-primary svg{width:17px;height:17px}
+  .btn-ghost{
+    width:100%; border:1px solid var(--line-strong); cursor:pointer; font-weight:600; font-size:14px; color:var(--cream);
+    background:rgba(200,169,106,.05); padding:14px; border-radius:13px; transition:.3s var(--ease);
+    display:flex; align-items:center; justify-content:center; gap:9px; margin-top:10px;
+  }
+  .btn-ghost:hover{background:rgba(200,169,106,.12); border-color:var(--gold)}
+
+  .foot{margin:26px 4px 4px; text-align:center; color:var(--muted); font-size:11px; line-height:1.6}
+  .foot b{color:var(--gold-soft); font-weight:600}
+
+  /* ============ REQUEST FORM (modal sheet) ============ */
+  .sheet-back{
+    position:fixed; inset:0; z-index:1000; display:flex; align-items:flex-end; justify-content:center;
+    background:rgba(0,0,0,.55); -webkit-backdrop-filter:blur(5px); backdrop-filter:blur(5px);
+    opacity:0; pointer-events:none; transition:opacity .35s var(--ease);
+  }
+  .sheet-back.open{opacity:1; pointer-events:auto}
+  .sheet{
+    width:100%; max-width:var(--phone); max-height:92dvh; overflow-y:auto;
+    background:linear-gradient(180deg,#1e2526,#161b1c); border:1px solid var(--line);
+    border-radius:26px 26px 0 0; box-shadow:var(--shadow-lg);
+    transform:translateY(100%); transition:transform .42s var(--ease);
+    padding:8px 20px calc(env(safe-area-inset-bottom) + 22px);
+  }
+  .sheet-back.open .sheet{transform:none}
+  .sheet::-webkit-scrollbar{width:0}
+  .grab{width:42px;height:5px;border-radius:999px;background:var(--line-strong);margin:8px auto 14px}
+  .sheet-hd{display:flex; align-items:center; gap:12px; margin-bottom:6px}
+  .sheet-hd .sic{width:44px;height:44px;border-radius:13px; background:linear-gradient(150deg,#2f3a3c,#1a2122); border:1px solid var(--line); display:grid; place-items:center; flex:0 0 auto}
+  .sheet-hd .sic i{font-size:26px; color:var(--gold); line-height:1}
+  .sheet-hd .k{font-size:10px; letter-spacing:.24em; text-transform:uppercase; color:var(--gold); font-weight:600}
+  .sheet-hd h2{font-size:21px; font-weight:400; color:#f3ece1; margin-top:3px}
+  .sheet-close{margin-left:auto; width:36px;height:36px;border-radius:10px; border:1px solid var(--line); background:rgba(200,169,106,.06); color:var(--gold); cursor:pointer; display:grid; place-items:center; transition:.3s var(--ease)}
+  .sheet-close:hover{background:rgba(200,169,106,.16); transform:rotate(90deg)}
+
+  .field{margin-bottom:14px}
+  .field:first-of-type{margin-top:14px}
+  .field label{display:block; font-size:12px; font-weight:600; letter-spacing:.04em; color:var(--gold-soft); margin-bottom:7px}
+  .field .req-star{color:var(--gold)}
+  .field input, .field textarea, .field select{
+    width:100%; font-family:inherit; font-size:14.5px; color:var(--cream);
+    background:var(--cream-1); border:1px solid var(--line); border-radius:12px; padding:13px 14px;
+    transition:.25s var(--ease); -webkit-appearance:none; appearance:none;
+  }
+  .field input::placeholder, .field textarea::placeholder{color:var(--muted); opacity:.8}
+  .field input:focus, .field textarea:focus, .field select:focus{
+    outline:none; border-color:var(--gold); background:#222a2c; box-shadow:0 0 0 4px rgba(200,169,106,.14);
+  }
+  /* native date input: make it behave like a normal full-width field (no intrinsic squish) */
+  .field input[type=date]{
+    color-scheme:dark; display:block; width:100%; min-width:0; min-height:48px;
+    line-height:1.2; text-align:left;
+  }
+  .field input[type=date]::-webkit-date-and-time-value{text-align:left; margin:0}
+  .field input[type=date]::-webkit-calendar-picker-indicator{
+    filter:invert(74%) sepia(18%) saturate(560%) hue-rotate(2deg) brightness(92%); cursor:pointer; opacity:.9;
+  }
+  .field textarea{min-height:64px; resize:vertical; line-height:1.5}
+  .field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M6 9l6 6 6-6' stroke='%23c8a96a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; padding-right:38px}
+  .field select option{background:#1b2123; color:var(--cream)}
+  /* From–To date range: two evenly-sized, full-width columns that don't shrink-overflow on mobile */
+  .field-row{display:grid; grid-template-columns:1fr 1fr; gap:11px; align-items:end}
+  .field-row .field{margin:0; min-width:0}
+  .field-row .field input{width:100%; min-width:0}
+
+  /* ---- payment choice: Card (booking fee now) / Cash (on delivery) ---- */
+  .pay-toggle{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:4px}
+  .pay-opt{
+    cursor:pointer; border:1px solid var(--line); background:var(--cream-1); border-radius:13px; padding:13px 12px;
+    display:flex; align-items:center; gap:10px; transition:.28s var(--ease); -webkit-tap-highlight-color:transparent; min-width:0;
+  }
+  .pay-opt .pic i{font-size:22px; color:var(--gold); line-height:1}
+  .pay-opt .pt{min-width:0}
+  .pay-opt .pt b{display:block; font-size:13px; font-weight:600; color:var(--cream)}
+  .pay-opt .pt span{font-size:10.5px; color:var(--muted); line-height:1.3}
+  .pay-opt.active{background:linear-gradient(150deg,var(--gold-soft),var(--gold)); border-color:transparent; box-shadow:var(--shadow-md)}
+  .pay-opt.active .pic i{color:#1a2122}
+  .pay-opt.active .pt b{color:#1a2122}
+  .pay-opt.active .pt span{color:rgba(26,33,34,.72)}
+
+  .form-note{display:flex; gap:10px; font-size:12px; color:var(--muted); line-height:1.5; margin:6px 2px 16px}
+  .form-note i{flex:0 0 auto; font-size:17px; color:var(--gold); margin-top:0}
+  .err{color:#e08a7a; font-size:12px; margin:-6px 2px 12px; display:none}
+  .err.show{display:block}
+  /* WhatsApp green send (this is the request route) */
+  .btn-wa{
+    width:100%; border:0; cursor:pointer; font-weight:700; font-size:15px; color:#fff;
+    background:#1faa55; padding:16px; border-radius:13px; letter-spacing:.01em;
+    box-shadow:0 10px 24px -14px rgba(31,170,85,.85); transition:.3s var(--ease);
+    display:flex; align-items:center; justify-content:center; gap:9px;
+  }
+  .btn-wa:hover{filter:brightness(1.05); transform:translateY(-2px)}
+  .btn-wa svg{width:19px;height:19px}
+
+  .toast{
+    position:fixed; left:50%; bottom:26px; transform:translate(-50%, 20px); z-index:1200;
+    background:linear-gradient(150deg,#2e3739,#1a2122); border:1px solid var(--line-strong); color:var(--cream);
+    font-size:13px; font-weight:500; padding:11px 18px; border-radius:12px; box-shadow:var(--shadow-lg);
+    opacity:0; pointer-events:none; transition:.4s var(--ease); max-width:88%; text-align:center;
+  }
+  .toast.show{opacity:1; transform:translate(-50%,0)}
+
+  @media (prefers-reduced-motion: reduce){ *{animation:none !important; transition:none !important} }
+  @media (max-width:480px){
+    .stage{padding:0; align-items:stretch}
+    .app{max-width:none; min-height:100dvh; border-radius:0; box-shadow:none; background:linear-gradient(180deg,#1a2122,#0f1314)}
+    .appbar{padding-top:calc(env(safe-area-inset-top) + 14px)}
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="app" id="app">
+
+    <!-- ===== HEADER ===== -->
+    <header class="appbar">
+      <a class="back-btn" href="../concierge/index.html" aria-label="Back to concierge" title="Back to AVA Concierge">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 19l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <div class="brand">
+        <span class="mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M3 16c2.2 0 2.2-2 4.4-2s2.2 2 4.4 2 2.2-2 4.4-2 2.2 2 4.4 2" stroke="#c8a96a" stroke-width="1.7" stroke-linecap="round"/><path d="M12 3.5l3 5.5H9l3-5.5z" stroke="#c8a96a" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </span>
+        <div>
+          <div class="name">AVA CONCIERGE</div>
+          <div class="sub">Bikes &amp; Cars</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ===== BODY ===== -->
+    <main class="scroll">
+
+      <div class="intro">
+        <span class="hi"><span class="dot"></span> Transport · Koh Phangan</span>
+        <h1>Scooters &amp; cars,<br/><em>delivered</em> to your villa.</h1>
+        <p>A serviced, automatic fleet — pick a model and we bring it to your door. Tell us the dates; your AVA concierge handles the rest.</p>
+      </div>
+
+      <div class="usps">
+        <div class="usp"><i class="ph-light ph-house-line"></i><b>Delivered to your villa</b></div>
+        <div class="usp"><i class="ph-light ph-gauge"></i><b>Serviced &amp; automatic</b></div>
+        <div class="usp"><i class="ph-light ph-wallet"></i><b>Pay on delivery</b></div>
+      </div>
+
+      <!-- filter tabs: Bikes / Cars -->
+      <div class="tabs" id="tabs" role="tablist" aria-label="Filter vehicles">
+        <button class="tab active" type="button" role="tab" data-kind="bike" aria-selected="true">🛵 Bikes</button>
+        <button class="tab" type="button" role="tab" data-kind="car" aria-selected="false">🚗 Cars</button>
+        <button class="tab" type="button" role="tab" data-kind="all" aria-selected="false">All</button>
+      </div>
+
+      <div class="sec-label">
+        <span class="t" id="secLabel">Choose your ride</span>
+        <span class="c" id="catCount"></span>
+      </div>
+
+      <!-- model cards injected -->
+      <div class="cats" id="cats"></div>
+
+      <!-- ===== TERMS ===== -->
+      <div class="terms">
+        <h4>Good to know</h4>
+        <ul>
+          <li><i class="ph-light ph-truck"></i><span><b>Delivery</b> to anywhere on the island — from <b>฿300</b> one-way per vehicle.</span></li>
+          <li><i class="ph-light ph-van"></i><span><b>Airport / pier transfer</b> (Thong Sala pier → your villa) — <b>฿1,100</b> per car.</span></li>
+          <li><i class="ph-light ph-key"></i><span><b>Deposit:</b> bikes from <b>฿5,000</b> or passport + valid visa · cars from <b>฿20,000</b> or passport.</span></li>
+          <li><i class="ph-light ph-shield-check"></i><span><b>Insurance</b> is included on cars only (no insurance on bikes). Manual bikes on request.</span></li>
+          <li><i class="ph-light ph-credit-card"></i><span><b>To confirm your booking:</b> a small booking fee by card (we'll send you a secure payment link). The balance is paid in cash on delivery, at your villa.</span></li>
+        </ul>
+      </div>
+
+      <!-- ===== OVERALL CTA ===== -->
+      <div class="cta-card">
+        <div class="ico" aria-hidden="true"><i class="ph-thin ph-paper-plane-tilt"></i></div>
+        <h3>Request your transport</h3>
+        <p>Not sure which one? Send us your dates and we'll recommend the right ride.</p>
+        <button class="btn-primary" id="openGeneral">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 12l16-8-6 16-3-7-7-1z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          Request / Book
+        </button>
+        <a class="btn-wa" id="waDirect" href="https://wa.me/66922927490?text=Hi%20AVA%2C%20I'd%20like%20to%20book%20transport" target="_blank" rel="noopener" style="margin-top:10px;text-decoration:none">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.97L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm5.8 14.13c-.24.68-1.42 1.32-1.95 1.36-.5.04-.5.4-3.15-.66-2.66-1.06-4.3-3.78-4.43-3.96-.13-.18-1.05-1.4-1.05-2.66 0-1.26.66-1.88.9-2.14.24-.26.52-.32.7-.32.18 0 .35 0 .5.01.16.01.38-.06.59.45.24.58.81 2 .88 2.14.07.14.12.31.02.49-.09.18-.14.29-.27.45-.13.16-.28.35-.4.47-.13.13-.27.28-.12.54.15.26.66 1.09 1.42 1.77.97.87 1.79 1.14 2.05 1.27.26.13.41.11.56-.07.15-.18.65-.76.82-1.02.17-.26.35-.21.59-.13.24.09 1.52.72 1.78.85.26.13.43.2.5.31.06.11.06.66-.18 1.34z"/></svg>
+          Chat on WhatsApp
+        </a>
+      </div>
+
+      <div class="foot">
+        Arranged &amp; delivered by your <b>AVA concierge</b>.<br/>
+        Prices are indicative — final quote confirmed before delivery. Photos are representative.
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ===== REQUEST SHEET ===== -->
+<div class="sheet-back" id="sheetBack" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+  <div class="sheet" id="sheet">
+    <div class="grab"></div>
+    <div class="sheet-hd">
+      <span class="sic" aria-hidden="true"><i class="ph-light ph-moped" id="sheetIcon"></i></span>
+      <div>
+        <div class="k">Request</div>
+        <h2 id="sheetTitle">Transport</h2>
+      </div>
+      <button class="sheet-close" id="sheetClose" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <form id="rqForm" novalidate>
+      <div class="field">
+        <label for="fVehicle">Vehicle <span class="req-star">*</span></label>
+        <select name="vehicle" id="fVehicle" aria-label="Vehicle category"></select>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="fFrom">From <span class="req-star">*</span></label><input type="date" name="from" id="fFrom" aria-label="Rental start date" /></div>
+        <div class="field"><label for="fTo">To</label><input type="date" name="to" id="fTo" aria-label="Rental end date" /></div>
+      </div>
+      <div class="field">
+        <label>Your name <span class="req-star">*</span></label>
+        <input type="text" name="name" autocomplete="name" placeholder="Full name" />
+      </div>
+      <div class="field">
+        <label for="fVilla">Villa <span class="req-star">*</span></label>
+        <select name="villa" id="fVilla" aria-label="Your villa"></select>
+      </div>
+      <div class="field">
+        <label>Phone / WhatsApp <span class="req-star">*</span></label>
+        <input type="tel" name="phone" inputmode="tel" autocomplete="tel" placeholder="+66 ..." />
+      </div>
+      <div class="field">
+        <label>Notes</label>
+        <textarea name="notes" placeholder="Helmets, manual, pickup time, anything else…"></textarea>
+      </div>
+
+      <div class="field">
+        <label>How you'd like to pay</label>
+        <div class="pay-toggle" id="payToggle">
+          <div class="pay-opt active" data-pay="card"><span class="pic"><i class="ph-light ph-credit-card"></i></span><span class="pt"><b>Card</b><span>Small booking fee now</span></span></div>
+          <div class="pay-opt" data-pay="cash"><span class="pic"><i class="ph-light ph-money"></i></span><span class="pt"><b>Cash</b><span>Pay on delivery</span></span></div>
+        </div>
+      </div>
+
+      <div class="err" id="formErr">Please fill in the required fields.</div>
+      <div class="form-note">
+        <i class="ph-light ph-info"></i>
+        <span>This is a request — your AVA concierge confirms the vehicle, availability &amp; final price. <b>Card:</b> a small booking fee via secure Stripe link to confirm; balance in cash on delivery. <b>Cash:</b> pay everything on delivery at your villa.</span>
+      </div>
+
+      <button type="submit" class="btn-wa" id="sendBtn">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.97L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm5.8 14.13c-.24.68-1.42 1.32-1.95 1.36-.5.04-.5.4-3.15-.66-2.66-1.06-4.3-3.78-4.43-3.96-.13-.18-1.05-1.4-1.05-2.66 0-1.26.66-1.88.9-2.14.24-.26.52-.32.7-.32.18 0 .35 0 .5.01.16.01.38-.06.59.45.24.58.81 2 .88 2.14.07.14.12.31.02.49-.09.18-.14.29-.27.45-.13.16-.28.35-.4.47-.13.13-.27.28-.12.54.15.26.66 1.09 1.42 1.77.97.87 1.79 1.14 2.05 1.27.26.13.41.11.56-.07.15-.18.65-.76.82-1.02.17-.26.35-.21.59-.13.24.09 1.52.72 1.78.85.26.13.43.2.5.31.06.11.06.66-.18 1.34z"/></svg>
+        Send request via WhatsApp
+      </button>
+      <button type="button" class="btn-ghost" id="sheetCancel">Cancel</button>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ============================================================
+     ROUTING TARGET  —  PLUG IN HERE  (TBD: needs Denis's input)
+     -----------------------------------------------------------
+     The request is sent to the AVA concierge (broker model per SOP):
+     AVA receives it, then forwards to partner Nico / "AVA Bike-Auto".
+     Guests are NEVER routed to the partner directly.
+
+     Set AVA_WA_NUMBER to AVA's WhatsApp number in international
+     format, digits only, no "+" / spaces (e.g. "66922927490").
+     While empty, the button opens a blank wa.me chooser (demo) and
+     the prefilled message is copied to the clipboard as a fallback.
+     ============================================================ */
+  var AVA_WA_NUMBER = "66922927490";   // AVA Concierge WhatsApp (…7490), monitored via Baileys API
+
+  /* ---------- DATA (source of truth: data/bikes_catalog.md, partner Nico) ---------- */
+  /* Flat list — one entry per individual model. kind:'bike'|'car' drives the filter tabs. */
+  var MODELS = [
+    /* ===== BIKES ===== */
+    { id:"scoopy", kind:"bike", phicon:"moped",
+      name:"Honda Scoopy", type:"125cc · automatic",
+      grad:"linear-gradient(150deg,#c98a5e,#9a5836)", ribbon:"Most popular",
+      hero:"./img/scoopy.jpg", price:"฿200–330", priceSub:"/ day",
+      note:"฿2,080 / week · ฿6,050 / month — longer rental = cheaper per day",
+      specs:[["lightning","Automatic"],["leaf","Light & nimble"],["engine","125cc"]] },
+
+    { id:"filano", kind:"bike", phicon:"moped",
+      name:"Yamaha Filano Hybrid", type:"125cc · automatic",
+      grad:"linear-gradient(150deg,#c98a5e,#9a5836)",
+      hero:"./img/filano.jpg", price:"฿200–330", priceSub:"/ day",
+      note:"฿2,080 / week · ฿6,050 / month — longer rental = cheaper per day",
+      specs:[["lightning","Automatic"],["leaf","Hybrid · economical"],["engine","125cc"]] },
+
+    { id:"click", kind:"bike", phicon:"moped",
+      name:"Honda Click", type:"125cc · automatic",
+      grad:"linear-gradient(150deg,#c98a5e,#9a5836)",
+      hero:"./img/click.jpg", price:"฿200–330", priceSub:"/ day",
+      note:"฿2,080 / week · ฿6,050 / month — longer rental = cheaper per day",
+      specs:[["lightning","Automatic"],["leaf","Light & nimble"],["engine","125cc"]] },
+
+    { id:"nmax", kind:"bike", phicon:"moped-front",
+      name:"Yamaha NMAX 155", type:"160cc · automatic",
+      grad:"linear-gradient(150deg,#b27a52,#8a5530)",
+      hero:"./img/nmax.jpg", price:"฿240–390", priceSub:"/ day",
+      note:"฿2,400 / week · ฿7,200 / month — longer rental = cheaper per day",
+      specs:[["lightning","Automatic"],["users-three","Comfy for 2"],["engine","160cc"]] },
+
+    { id:"pcx", kind:"bike", phicon:"moped-front",
+      name:"Honda PCX", type:"160cc · automatic",
+      grad:"linear-gradient(150deg,#b27a52,#8a5530)",
+      hero:"./img/pcx.jpg", price:"฿240–390", priceSub:"/ day",
+      note:"฿2,400 / week · ฿7,200 / month — longer rental = cheaper per day",
+      specs:[["lightning","Automatic"],["users-three","Comfy for 2"],["engine","160cc"]] },
+
+    { id:"forza", kind:"bike", phicon:"motorcycle",
+      name:"Honda Forza", type:"350cc · automatic",
+      grad:"linear-gradient(150deg,#7fa6a8,#456b72)",
+      hero:"./img/forza.jpg", price:"฿600–990", priceSub:"/ day",
+      note:"฿6,000 / week · ฿18,000 / month — longer rental = cheaper per day",
+      specs:[["lightning","Automatic"],["seat","Maxi comfort"],["engine","350cc"]] },
+
+    { id:"xmax", kind:"bike", phicon:"motorcycle",
+      name:"Yamaha XMAX", type:"300cc · automatic",
+      grad:"linear-gradient(150deg,#7fa6a8,#456b72)",
+      hero:"./img/xmax.jpg", price:"฿600–990", priceSub:"/ day",
+      note:"฿6,000 / week · ฿18,000 / month — longer rental = cheaper per day",
+      specs:[["lightning","Automatic"],["seat","Maxi comfort"],["engine","300cc"]] },
+
+    /* ===== CARS  (automatic, insurance included; from–to depends on model + duration) ===== */
+    { id:"mazda2", kind:"car", phicon:"car",
+      name:"Mazda 2", type:"Automatic · insured",
+      grad:"linear-gradient(150deg,#8ba0ad,#516a78)",
+      hero:"./img/mazda2.jpg", price:"฿660–1,650", priceSub:"/ day",
+      note:"Exact price depends on model & rental length — longer = cheaper per day",
+      specs:[["lightning","Automatic"],["shield-check","Insured"],["snowflake","Air-con"]] },
+
+    { id:"city", kind:"car", phicon:"car",
+      name:"Honda City", type:"Automatic · insured",
+      grad:"linear-gradient(150deg,#8ba0ad,#516a78)",
+      hero:"./img/city.jpg", price:"฿660–1,650", priceSub:"/ day",
+      note:"Exact price depends on model & rental length — longer = cheaper per day",
+      specs:[["lightning","Automatic"],["shield-check","Insured"],["snowflake","Air-con"]] },
+
+    { id:"yaris-ativ", kind:"car", phicon:"car",
+      name:"Toyota Yaris Ativ", type:"Automatic · insured",
+      grad:"linear-gradient(150deg,#8ba0ad,#516a78)",
+      hero:"./img/yaris-ativ.jpg", price:"฿660–1,650", priceSub:"/ day",
+      note:"Exact price depends on model & rental length — longer = cheaper per day",
+      specs:[["lightning","Automatic"],["shield-check","Insured"],["snowflake","Air-con"]] },
+
+    { id:"yaris-cross", kind:"car", phicon:"car",
+      name:"Toyota Yaris Cross", type:"Automatic · insured",
+      grad:"linear-gradient(150deg,#8ba0ad,#516a78)",
+      hero:"./img/yaris-cross.jpg", price:"฿1,090–2,750", priceSub:"/ day",
+      note:"Exact price depends on model & rental length — longer = cheaper per day",
+      specs:[["lightning","Automatic"],["shield-check","Insured"],["snowflake","Air-con"]] },
+
+    { id:"hrv", kind:"car", phicon:"car",
+      name:"Honda HR-V", type:"Automatic · insured",
+      grad:"linear-gradient(150deg,#8ba0ad,#516a78)",
+      hero:"./img/hrv.jpg", price:"฿1,090–2,750", priceSub:"/ day",
+      note:"Exact price depends on model & rental length — longer = cheaper per day",
+      specs:[["lightning","Automatic"],["shield-check","Insured"],["snowflake","Air-con"]] }
+  ];
+
+  var VILLAS = ["Aurora","Radharani","Twin Palms","Bunny","Four Moons","Altair","Deneb","Other / not sure"];
+
+  /* ---------- helpers ---------- */
+  function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+  function phi(name, weight){
+    var cls = weight==="thin"?"ph-thin":weight==="light"?"ph-light":weight==="fill"?"ph-fill":"ph";
+    return '<i class="'+cls+' ph-'+esc(name)+'" aria-hidden="true"></i>';
+  }
+  function modelById(id){ for(var i=0;i<MODELS.length;i++) if(MODELS[i].id===id) return MODELS[i]; return null; }
+  var toastEl = document.getElementById("toast");
+  function toast(msg){ toastEl.textContent = msg; toastEl.classList.add("show"); clearTimeout(toast._t); toast._t = setTimeout(function(){ toastEl.classList.remove("show"); }, 2600); }
+  function fmtDate(iso){ if(!iso) return ""; var d=new Date(iso+"T00:00:00"); return isNaN(d)?iso:d.toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}); }
+
+  /* ---------- render model cards (filtered by active tab) ---------- */
+  var catsEl = document.getElementById("cats");
+  var catCountEl = document.getElementById("catCount");
+  var secLabelEl = document.getElementById("secLabel");
+  var activeKind = "bike";   // default tab
+
+  function cardHTML(m){
+    var tags = m.specs.map(function(t){ return '<span class="tag">'+phi(t[0],"light")+esc(t[1])+'</span>'; }).join("");
+    // real model photo for the card (falls back to the gold line icon if it fails to load)
+    var hero = m.hero ? '<img class="hero" src="'+esc(m.hero)+'" alt="'+esc(m.name)+'" loading="lazy" onerror="this.remove()"/><span class="scrim"></span>' : "";
+    return ''+
+      '<article class="cat" data-cat="'+esc(m.id)+'" style="--cat-grad:'+m.grad+'">'+
+        '<div class="media">'+
+          phi(m.phicon,"thin")+
+          hero+
+          (m.ribbon?'<span class="ribbon">'+esc(m.ribbon)+'</span>':'')+
+          '<span class="ph-tag">'+esc(m.type)+'</span>'+
+        '</div>'+
+        '<div class="info">'+
+          '<div class="top">'+
+            '<div class="nm">'+esc(m.name)+'</div>'+
+            '<div class="pr">'+esc(m.price)+'<small>'+esc(m.priceSub)+'</small></div>'+
+          '</div>'+
+          '<div class="meta">'+tags+'</div>'+
+          (m.note?'<div class="note">'+phi("tag","light")+'<span>'+esc(m.note)+'</span></div>':'')+
+          '<div class="req-row">'+
+            '<button class="req-btn" type="button" data-req="'+esc(m.id)+'">'+
+              '<svg viewBox="0 0 24 24" fill="none"><path d="M4 12l16-8-6 16-3-7-7-1z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>'+
+              'Request this'+
+            '</button>'+
+          '</div>'+
+        '</div>'+
+      '</article>';
+  }
+
+  function renderCards(){
+    var list = MODELS.filter(function(m){ return activeKind==="all" || m.kind===activeKind; });
+    catsEl.innerHTML = list.map(cardHTML).join("");
+    catCountEl.textContent = list.length + " " + (list.length===1 ? "model" : "models");
+    secLabelEl.textContent = activeKind==="bike" ? "Choose your scooter"
+                           : activeKind==="car"  ? "Choose your car"
+                           : "Choose your ride";
+  }
+  renderCards();
+
+  /* ---------- filter tabs ---------- */
+  var tabsEl = document.getElementById("tabs");
+  tabsEl.addEventListener("click", function(e){
+    var btn = e.target.closest("button[data-kind]");
+    if(!btn) return;
+    activeKind = btn.getAttribute("data-kind");
+    var all = tabsEl.querySelectorAll(".tab");
+    for(var i=0;i<all.length;i++){
+      var on = all[i]===btn;
+      all[i].classList.toggle("active", on);
+      all[i].setAttribute("aria-selected", on ? "true" : "false");
+    }
+    renderCards();
+  });
+
+  /* ---------- request sheet ---------- */
+  var sheetBack = document.getElementById("sheetBack");
+  var sheet = document.getElementById("sheet");
+  var fVehicle = document.getElementById("fVehicle");
+  var fVilla = document.getElementById("fVilla");
+  var fFrom = document.getElementById("fFrom");
+  var fTo = document.getElementById("fTo");
+  var form = document.getElementById("rqForm");
+  var sendBtn = document.getElementById("sendBtn");
+  var lastFocus = null;
+
+  /* ---------- payment choice (Card = booking fee now / Cash = on delivery) ---------- */
+  var payChoice = "card";
+  var payToggle = document.getElementById("payToggle");
+  function setPay(choice){
+    payChoice = choice;
+    payToggle.querySelectorAll(".pay-opt").forEach(function(o){
+      o.classList.toggle("active", o.getAttribute("data-pay")===choice);
+    });
+  }
+  payToggle.addEventListener("click", function(e){
+    var opt = e.target.closest(".pay-opt"); if(!opt) return;
+    setPay(opt.getAttribute("data-pay"));
+  });
+
+  // populate selects
+  fVilla.innerHTML = '<option value="">Select your villa…</option>' + VILLAS.map(function(v){ return '<option>'+esc(v)+'</option>'; }).join("");
+  // grouped <optgroup> so guests can pick the exact model in the form
+  (function(){
+    function opts(kind){ return MODELS.filter(function(m){return m.kind===kind;}).map(function(m){ return '<option value="'+esc(m.id)+'">'+esc(m.name)+' — '+esc(m.price)+esc(m.priceSub)+'</option>'; }).join(""); }
+    fVehicle.innerHTML = '<option value="">Select a model…</option>' +
+      '<optgroup label="🛵 Bikes">' + opts("bike") + '</optgroup>' +
+      '<optgroup label="🚗 Cars">'  + opts("car")  + '</optgroup>';
+  })();
+
+  var today = new Date().toISOString().slice(0,10);
+  fFrom.min = today; fTo.min = today; fFrom.value = today;
+
+  function openSheet(modelId){
+    lastFocus = document.activeElement;
+    var c = modelId ? modelById(modelId) : null;
+    document.getElementById("sheetTitle").textContent = c ? c.name : "Transport";
+    document.getElementById("sheetIcon").className = "ph-light ph-" + (c ? c.phicon : "moped");
+    fVehicle.value = c ? c.id : "";
+    setPay("card");
+    document.getElementById("formErr").classList.remove("show");
+    resetSendBtn();
+    sheetBack.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+  function closeSheet(){
+    sheetBack.classList.remove("open");
+    document.body.style.overflow = "";
+    if(lastFocus) try{ lastFocus.focus(); }catch(e){}
+  }
+  function resetSendBtn(){
+    sendBtn.disabled = false;
+    sendBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.97L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm5.8 14.13c-.24.68-1.42 1.32-1.95 1.36-.5.04-.5.4-3.15-.66-2.66-1.06-4.3-3.78-4.43-3.96-.13-.18-1.05-1.4-1.05-2.66 0-1.26.66-1.88.9-2.14.24-.26.52-.32.7-.32.18 0 .35 0 .5.01.16.01.38-.06.59.45.24.58.81 2 .88 2.14.07.14.12.31.02.49-.09.18-.14.29-.27.45-.13.16-.28.35-.4.47-.13.13-.27.28-.12.54.15.26.66 1.09 1.42 1.77.97.87 1.79 1.14 2.05 1.27.26.13.41.11.56-.07.15-.18.65-.76.82-1.02.17-.26.35-.21.59-.13.24.09 1.52.72 1.78.85.26.13.43.2.5.31.06.11.06.66-.18 1.34z"/></svg> Send request via WhatsApp';
+  }
+
+  // open triggers
+  catsEl.addEventListener("click", function(e){
+    var btn = e.target.closest("button[data-req]");
+    if(btn){ openSheet(btn.getAttribute("data-req")); return; }
+    var card = e.target.closest("[data-cat]");
+    if(card) openSheet(card.getAttribute("data-cat"));
+  });
+  document.getElementById("openGeneral").addEventListener("click", function(){ openSheet(null); });
+  document.getElementById("sheetClose").addEventListener("click", closeSheet);
+  document.getElementById("sheetCancel").addEventListener("click", closeSheet);
+  sheetBack.addEventListener("click", function(e){ if(e.target===sheetBack) closeSheet(); });
+  document.addEventListener("keydown", function(e){ if(e.key==="Escape" && sheetBack.classList.contains("open")) closeSheet(); });
+
+  // build the WhatsApp message (this is what AVA receives, then brokers to Nico)
+  function buildMessage(d){
+    var c = modelById(d.vehicle);
+    var when = fmtDate(d.from) + (d.to ? " → " + fmtDate(d.to) : "");
+    var lines = [
+      "Hi AVA — I'd like to request transport 🛵",
+      "",
+      "• Vehicle: " + (c ? c.name + " (" + c.price + c.priceSub + ")" : d.vehicle),
+      "• Dates: " + when,
+      "• Name: " + d.name,
+      "• Villa: " + d.villa,
+      "• Phone: " + d.phone
+    ];
+    lines.push("• Payment: " + (d.pay==="cash"
+      ? "Cash on delivery"
+      : "Card — booking fee now (secure Stripe link), balance on delivery"));
+    if(d.notes) lines.push("• Notes: " + d.notes);
+    lines.push("", "Sent from the AVA Concierge app");
+    return lines.join("\n");
+  }
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var err = document.getElementById("formErr");
+    var d = {
+      vehicle: fVehicle.value.trim(),
+      from: fFrom.value,
+      to: fTo.value,
+      name: form.name.value.trim(),
+      villa: fVilla.value.trim(),
+      phone: form.phone.value.trim(),
+      pay: payChoice,
+      notes: form.notes.value.trim()
+    };
+    if(!d.vehicle || !d.from || !d.name || !d.villa || !d.phone){
+      err.textContent = "Please choose a vehicle, dates, your name, villa and phone.";
+      err.classList.add("show");
+      sheet.scrollTo({top:0, behavior:"smooth"});
+      return;
+    }
+    err.classList.remove("show");
+
+    var msg = buildMessage(d);
+    var encoded = encodeURIComponent(msg);
+    var waUrl = AVA_WA_NUMBER
+      ? ("https://wa.me/" + AVA_WA_NUMBER + "?text=" + encoded)
+      : ("https://wa.me/?text=" + encoded);   // demo fallback (no number wired yet)
+
+    // fallback: copy the message so the request isn't lost if the number is still TBD
+    if(!AVA_WA_NUMBER && navigator.clipboard){ try{ navigator.clipboard.writeText(msg); }catch(e){} }
+
+    sendBtn.disabled = true;
+    sendBtn.innerHTML = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5 9-11" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Opening WhatsApp…';
+    toast(AVA_WA_NUMBER ? "Opening WhatsApp to send your request…" : "Demo: message copied. Wire AVA's WhatsApp number to send.");
+    setTimeout(function(){
+      window.open(waUrl, "_blank");
+      setTimeout(function(){ closeSheet(); resetSendBtn(); }, 600);
+    }, 350);
+  });
+
+})();
+</script>
+</body>
+</html>
